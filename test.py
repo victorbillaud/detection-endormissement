@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from pygame import mixer
 
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
 eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye_tree_eyeglasses.xml')
@@ -9,6 +10,16 @@ compteur = 0
 
 cap = cv2.VideoCapture(0)
 ret, img = cap.read()
+
+
+# Starting the mixer
+mixer.init()
+
+# Loading the song
+mixer.music.load("file.mp3")
+
+# Setting the volume
+mixer.music.set_volume(0.7)
 
 while (ret):
     ret, img = cap.read()
@@ -34,13 +45,7 @@ while (ret):
             if (len(eyes) >= 2):
 
                 if (first_read):
-                    for (x2, y2, w2, h2) in eyes:
-                        img2 = cv2.rectangle(img, (x2, y2), (x2 + w2, y2 + h2), (0, 0, 255), 2)
-                        cv2.putText(img2,
-                                    "Eye detected press s to begin",
-                                    (70, 70),
-                                    cv2.FONT_HERSHEY_PLAIN, 3,
-                                    (0, 255, 0), 2)
+                    mixer.music.pause()
                     cv2.putText(img,
                                 "Eye detected press s to begin",
                                 (70, 70),
@@ -53,7 +58,7 @@ while (ret):
                                 (255, 255, 255), 2)
             else:
                 if (first_read):
-
+                    mixer.music.play()
                     cv2.putText(img,
                                 "No eyes detected", (70, 70),
                                 cv2.FONT_HERSHEY_PLAIN, 3,
